@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "PowerShell(Invoke-WebRequest -Uri \"http://localhost:3000/pricing\" -UseBasicParsing | Select-Object -ExpandProperty StatusCode)",
+      "Bash(npx next *)",
+      "Bash(dir src\\\\app\\\\favicon.ico)",
+      "Bash(npm run *)"
+    ]
+  }
+}
