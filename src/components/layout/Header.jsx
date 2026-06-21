@@ -1,52 +1,56 @@
-'use client'
+"use client";
 
-import { useState, useEffect } from 'react'
-import Link from 'next/link'
-import { supabase } from '@/lib/supabase'
+import { useState, useEffect } from "react";
+import Link from "next/link";
+import { supabase } from "../../lib/supabase";
 
 const navLinks = [
-  { href: '/service', label: '서비스 소개' },
-  { href: '/pricing', label: '요금제' },
-  { href: '/ir', label: 'IR' },
-  { href: '/contact', label: '문의하기' },
-]
+  { href: "/service", label: "서비스 소개" },
+  { href: "/pricing", label: "요금제" },
+  { href: "/ir", label: "IR" },
+  { href: "/contact", label: "문의하기" },
+];
 
 export default function Header() {
-  const [scrolled, setScrolled] = useState(false)
-  const [mobileOpen, setMobileOpen] = useState(false)
-  const [user, setUser] = useState(null)
+  const [scrolled, setScrolled] = useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const [user, setUser] = useState(null);
 
   useEffect(() => {
-    const handleScroll = () => setScrolled(window.scrollY > 64)
-    handleScroll()
-    window.addEventListener('scroll', handleScroll, { passive: true })
-    return () => window.removeEventListener('scroll', handleScroll)
-  }, [])
+    const handleScroll = () => setScrolled(window.scrollY > 64);
+    handleScroll();
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   useEffect(() => {
-    supabase.auth.getUser().then(({ data }) => setUser(data?.user ?? null))
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_, session) => {
-      setUser(session?.user ?? null)
-    })
-    return () => subscription.unsubscribe()
-  }, [])
+    supabase.auth.getUser().then(({ data }) => setUser(data?.user ?? null));
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_, session) => {
+      setUser(session?.user ?? null);
+    });
+    return () => subscription.unsubscribe();
+  }, []);
 
   useEffect(() => {
     if (mobileOpen) {
-      document.body.style.overflow = 'hidden'
+      document.body.style.overflow = "hidden";
     } else {
-      document.body.style.overflow = ''
+      document.body.style.overflow = "";
     }
-    return () => { document.body.style.overflow = '' }
-  }, [mobileOpen])
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [mobileOpen]);
 
   const handleLogout = async () => {
-    await supabase.auth.signOut()
-    setMobileOpen(false)
-  }
+    await supabase.auth.signOut();
+    setMobileOpen(false);
+  };
 
-  const textColor = scrolled || mobileOpen ? 'text-[#1D1D1F]' : 'text-white'
-  const logoColor = scrolled || mobileOpen ? 'text-[#0071E3]' : 'text-white'
+  const textColor = scrolled || mobileOpen ? "text-[#1D1D1F]" : "text-white";
+  const logoColor = scrolled || mobileOpen ? "text-[#0071E3]" : "text-white";
 
   return (
     <>
@@ -54,14 +58,18 @@ export default function Header() {
         className={`
           fixed top-0 left-0 right-0 z-50 h-16
           transition-all duration-300
-          ${scrolled
-            ? 'bg-white/80 backdrop-blur-xl border-b border-[#D2D2D7]'
-            : 'bg-transparent'
+          ${
+            scrolled
+              ? "bg-white/80 backdrop-blur-xl border-b border-[#D2D2D7]"
+              : "bg-transparent"
           }
         `}
       >
         <div className="max-w-[1200px] mx-auto px-6 lg:px-20 h-full flex items-center justify-between">
-          <Link href="/" className={`text-xl font-bold tracking-tight ${logoColor} transition-colors duration-300`}>
+          <Link
+            href="/"
+            className={`text-xl font-bold tracking-tight ${logoColor} transition-colors duration-300`}
+          >
             OnCare
           </Link>
 
@@ -80,7 +88,9 @@ export default function Header() {
           <div className="hidden md:flex items-center gap-4">
             {user ? (
               <div className="flex items-center gap-4">
-                <span className={`text-sm ${textColor}`}>{user.email?.split('@')[0]}</span>
+                <span className={`text-sm ${textColor}`}>
+                  {user.email?.split("@")[0]}
+                </span>
                 <button
                   onClick={handleLogout}
                   className={`text-sm font-medium ${textColor} hover:opacity-70 transition-all duration-300`}
@@ -112,12 +122,34 @@ export default function Header() {
             aria-label="메뉴 열기"
           >
             {mobileOpen ? (
-              <svg width="24" height="24" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+              <svg
+                width="24"
+                height="24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M6 18L18 6M6 6l12 12"
+                />
               </svg>
             ) : (
-              <svg width="24" height="24" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+              <svg
+                width="24"
+                height="24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M4 6h16M4 12h16M4 18h16"
+                />
               </svg>
             )}
           </button>
@@ -168,5 +200,5 @@ export default function Header() {
         </div>
       )}
     </>
-  )
+  );
 }
